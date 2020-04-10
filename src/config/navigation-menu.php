@@ -32,8 +32,8 @@ return [
         'icon' => 'fe fe-check-circle',
     ],
     'people-payroll-leaves' => [
-        'title' => 'Leave Request',
-        'route' => 'leave-request',
+        'title' => 'Leave',
+        'route' => 'leave-main',
         'icon' => 'fe fe-sliders',
     ],
 
