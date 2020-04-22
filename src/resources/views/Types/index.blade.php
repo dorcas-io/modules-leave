@@ -64,7 +64,7 @@
                         </div>
                     @endif
                     @include('modules-people-leaves::modals.add-leave-type')
-                    @include('modules-people-leaves::.modals.edit-leave-type')
+                    @include('modules-people-leaves::modals.edit-leave-type')
 
                 </div>
 

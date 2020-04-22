@@ -25,7 +25,7 @@ Route::group(['namespace' => 'Dorcas\ModulesPeopleLeaves\Http\Controllers', 'mid
     Route::get('leave-request/create', 'ModulesPeopleLeavesController@leaveRequestForm')->name('leave-request-create');
     Route::post('leave-request', 'ModulesPeopleLeavesController@createLeaveRequest')->name('leave-request');
     Route::get('leave-request/{id}', 'ModulesPeopleLeavesController@singleLeaveRequest')->name('leave-request');
-    Route::get('leave-request/update/{id}', 'ModulesPeopleLeavesController@singleLeaveRequest')->name('leave-request-single');
+    Route::get('leave-request/single/{id}', 'ModulesPeopleLeavesController@getLeaveRequest')->name('leave-request-single');
     Route::post('leave-request/update/{id}', 'ModulesPeopleLeavesController@updateLeaveRequest')->name('leave-request-update');
     Route::delete('leave-request/{id}', 'ModulesPeopleLeavesController@deleteLeaveRequest')->name('leave-request');
     Route::get('leave-request-search', 'ModulesPeopleLeavesController@searchLeaveRequest')->name('leave-request-search');

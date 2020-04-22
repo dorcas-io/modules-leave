@@ -495,8 +495,7 @@ class ModulesPeopleLeavesController extends Controller
 
     public function singleLeaveRequest(Request $request, Sdk $sdk, string $id){
         try {
-
-
+          dd($id);
             $this->data['submenuAction'] = '';
             $this->setViewUiResponse($request);
             $this->data['args'] = $request->query->all();
@@ -525,7 +524,23 @@ class ModulesPeopleLeavesController extends Controller
 
 
         }
-    }
+      }
+      public function getLeaveRequest(Request $request, Sdk $sdk, string $id){
+        try {
+            $response = $sdk->createLeavesResource()->send('get',['requests',$id]);
+            if(!$response->isSuccessful()){
+                throw new RecordNotFoundException($response->errors[0]['title'] ?? 'Could not find the Leave Request');
+            }
+            $request = $response->getData(true);
+            return response()->json([$request, 200]);
+        }
+        catch (\Exception $e){
+            return response()->json(['message' => $e->getMessage()], 400);
+
+        }
+      }
+
+
 
     public function updateLeaveRequest(Request $request, Sdk $sdk, string $id){
         try{

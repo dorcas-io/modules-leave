@@ -48,6 +48,8 @@
                                 </thead>
                             </table>
                         </div>
+
+                    @include('modules-people-leaves::modals.rejections')
                     @else
                         <div class="col s12" >
                             @component('layouts.blocks.tabler.empty-fullpage')
@@ -65,7 +67,6 @@
                 </div>
 
 
-
             </div>
 
         </div>
@@ -77,6 +78,7 @@
         let LeaveGroup =  new Vue({
             el: '#request',
             data:{
+              comments: null,
             },
             methods:{
 
@@ -93,43 +95,34 @@
                     switch (action) {
                         case 'view':
                             return true;
-                        case 'delete_leave_request':
-                            this.deleteLeaveGroup(id,index,name);
+                            break;
+                        case 'view_rejections':
+                            this.viewRejections(id);
                             break;
                     }
 
                 },
-                deleteLeaveGroup(id,index,name){
-                    Swal.fire({
-                        title: "Are you sure?",
-                        text: "You are about to delete Leave Reqyest",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, delete it!",
-                        showLoaderOnConfirm: true,
-                        preConfirm: () => {
-                            return axios.delete("/mpe/leave-request/" + id)
-                                .then(function (response) {
-                                    $('#request-table').bootstrapTable('removeByUniqueId', response.data.id);
-                                    return swal("Deleted!", "The Leave Group was successfully deleted.", "success");
-                                }).catch(function (error) {
-                                    var message = '';
-                                    console.log(error);
-                                    swal.fire({
-                                        title:"Error!",
-                                        text:error.response.data.message,
-                                        type:"error",
-                                        showLoaderOnConfirm: true,
-                                    });
-                                });
-                        },
-                        allowOutsideClick: () => !Swal.isLoading()
+                async viewRejections(id){
+                  const self = this;
+                  await axios.get("/mpe/leave-request/single/" + id)
+                      .then(function (response) {
+                        self.comments = response.data[0].rejection_comments;
+                          $('#rejections').modal('show')
 
+                      })
+                      .catch(function (error) {
+                          var message = '';
+                          console.log(error);
+                          swal.fire({
+                              title:"Error!",
+                              text:error.response.data,
+                              type:"error",
+                              showLoaderOnConfirm: true,
+                          });
+                      });
 
-                    });
-                },
-
+                      console.log(self.comments);
+                }
             },
             mounted(){
             }
@@ -145,12 +138,13 @@
 
             }
             else if(row.status === 'approved'){
-                row.status = '<a class="badge badge-pill badge-success text-white">Active</a>'
+                row.status = '<a class="badge badge-pill badge-success text-white">Approved</a>'
 
             }
             else{
-                row.status = '<a class="badge badge-pill badge-danger text-white">Active</a>'
-                row.buttons = '<a class="btn btn-sm btn-primary text-white"   href="/mpe/leave-request/update/'+row.id+'">Update</a> &nbsp; ' ;
+                row.status = '<a class="badge badge-pill badge-danger text-white">Declined</a>';
+                row.buttons = '<a class="btn btn-sm btn-primary text-white"   href="/mpe/leave-request/'+row.id+'">Update</a> &nbsp; ' +
+                '<a class="btn btn-sm text-white btn-danger " data-id="'+row.id+'" data-action="view_rejections">View  Comments</a>';
 
             }
         }
